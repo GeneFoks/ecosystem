@@ -42,6 +42,24 @@ export default function PillarsEditor({ tenantId, initial }: { tenantId: string;
     setTimeout(() => setSavedId(s => (s === row.id ? null : s)), 2000)
   }
 
+  const moveRow = async (index: number, dir: -1 | 1) => {
+    const target = index + dir
+    if (target < 0 || target >= rows.length) return
+    setBusy(true)
+    const a = rows[index]
+    const b = rows[target]
+    // Swap their sort_order values and reorder locally.
+    const newRows = [...rows]
+    newRows[index] = { ...b, sort_order: a.sort_order }
+    newRows[target] = { ...a, sort_order: b.sort_order }
+    setRows(newRows)
+    await Promise.all([
+      supabase.from('pillars').update({ sort_order: b.sort_order }).eq('id', a.id),
+      supabase.from('pillars').update({ sort_order: a.sort_order }).eq('id', b.id),
+    ])
+    setBusy(false)
+  }
+
   const deleteRow = async (id: string) => {
     setBusy(true)
     await supabase.from('pillars').delete().eq('id', id)
@@ -51,8 +69,12 @@ export default function PillarsEditor({ tenantId, initial }: { tenantId: string;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {rows.map(row => (
+      {rows.map((row, index) => (
         <div key={row.id} style={cardStyle}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginBottom: 4 }}>
+            <button style={{ ...ghostBtn, padding: '4px 12px' }} disabled={busy || index === 0} onClick={() => moveRow(index, -1)}>↑</button>
+            <button style={{ ...ghostBtn, padding: '4px 12px' }} disabled={busy || index === rows.length - 1} onClick={() => moveRow(index, 1)}>↓</button>
+          </div>
           <div>
             <label style={labelStyle}>Title</label>
             <input style={inputStyle} value={row.title} onChange={e => updateField(row.id, 'title', e.target.value)} />
