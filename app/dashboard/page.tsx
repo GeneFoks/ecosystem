@@ -25,7 +25,7 @@ export default async function Dashboard() {
       <nav style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {[
           { href: '/dashboard/person', label: 'Profile' },
-          { href: '/dashboard/pillars', label: 'Pillars' },
+          { href: '/dashboard/pillars', label: 'Projects' },
           { href: '/dashboard/offers', label: 'Offers' },
           { href: '/dashboard/facts', label: 'Facts' },
           { href: '/dashboard/channels', label: 'Channels' },

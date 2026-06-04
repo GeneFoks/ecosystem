@@ -111,7 +111,7 @@ export default function PillarsEditor({ tenantId, initial }: { tenantId: string;
         </div>
       ))}
       <button style={{ ...primaryBtn, alignSelf: 'flex-start' }} disabled={busy} onClick={addRow}>
-        + Add pillar
+        + Add project
       </button>
     </div>
   )

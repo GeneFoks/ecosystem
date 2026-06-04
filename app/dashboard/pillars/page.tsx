@@ -17,7 +17,7 @@ export default async function PillarsPage() {
       <Link href="/dashboard" style={{ color: 'var(--text-muted)', fontSize: 14, textDecoration: 'none' }}>
         &larr; Dashboard
       </Link>
-      <h1 style={{ fontSize: 24, fontWeight: 800, margin: '16px 0 24px' }}>Pillars</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: '16px 0 24px' }}>Projects</h1>
       <PillarsEditor tenantId={tenantId} initial={pillars ?? []} />
     </main>
   )

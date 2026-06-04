@@ -201,7 +201,7 @@ export default async function PublicPage({ params }: Params) {
       {pillars && pillars.length > 0 && (
         <section style={{ borderBottom: `1px solid ${THEME.border}`, padding: '72px 0' }}>
           <div style={wrap}>
-            <div style={sectionLabel}>Ecosystem</div>
+            <div style={sectionLabel}>Projects</div>
             <div style={{ display: 'grid', gap: 1, background: THEME.border, border: `1px solid ${THEME.border}` }}>
               {pillars.map(p => {
                 const pillarOffers = offersByPillar.get(p.id) ?? []
