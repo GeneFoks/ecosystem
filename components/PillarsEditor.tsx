@@ -33,6 +33,7 @@ export default function PillarsEditor({ tenantId, initial }: { tenantId: string;
       description: row.description,
       icon: row.icon,
       status: row.status,
+      link_url: row.link_url,
       sort_order: row.sort_order,
     }).eq('id', row.id)
     setBusy(false)
@@ -56,6 +57,10 @@ export default function PillarsEditor({ tenantId, initial }: { tenantId: string;
           <div>
             <label style={labelStyle}>Description</label>
             <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={2} value={row.description} onChange={e => updateField(row.id, 'description', e.target.value)} />
+          </div>
+          <div>
+            <label style={labelStyle}>Link (button URL)</label>
+            <input style={inputStyle} value={row.link_url} onChange={e => updateField(row.id, 'link_url', e.target.value)} placeholder="https://fokinsllc.com" />
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
             <div style={{ flex: 1 }}>

@@ -2,19 +2,19 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { supabasePublic } from '@/lib/supabase-public'
 
-// ── THEME TOKENS (placeholder) ──
-// Swap these for the real design system later. All visuals reference THEME.
+// ── SPACEX-STYLE THEME TOKENS ──
+// Pure black, high contrast, bold uppercase typography, sharp edges.
 const THEME = {
-  bg: '#0B0B10',
-  surface: '#13131C',
-  surface2: '#1B1B27',
-  border: '#262636',
-  text: '#F4F4FB',
-  muted: '#9CA3C4',
-  accent: '#6366F1',
-  font: 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif',
-  radius: 16,
-  maxWidth: 720,
+  bg: '#000000',
+  surface: '#0A0A0A',
+  surface2: '#111111',
+  border: '#1F1F1F',
+  borderStrong: '#333333',
+  text: '#FFFFFF',
+  muted: '#9A9A9A',
+  accent: '#FFFFFF',
+  font: '"Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, sans-serif',
+  maxWidth: 1100,
 }
 
 export const revalidate = 60
@@ -87,111 +87,249 @@ export default async function PublicPage({ params }: Params) {
     }
   }
 
-  const section: React.CSSProperties = { marginBottom: 48 }
-  const h2: React.CSSProperties = { fontSize: 13, textTransform: 'uppercase', letterSpacing: 1, color: THEME.muted, marginBottom: 16 }
-  const card: React.CSSProperties = { background: THEME.surface, border: `1px solid ${THEME.border}`, borderRadius: THEME.radius, padding: 18 }
+  // ── Shared styles ──
+  const wrap: React.CSSProperties = { maxWidth: THEME.maxWidth, margin: '0 auto', padding: '0 24px' }
+  const sectionLabel: React.CSSProperties = {
+    fontSize: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 4,
+    color: THEME.muted,
+    fontWeight: 700,
+    marginBottom: 28,
+  }
+  const ctaOutline: React.CSSProperties = {
+    display: 'inline-block',
+    padding: '14px 32px',
+    border: `1px solid ${THEME.text}`,
+    color: THEME.text,
+    fontSize: 13,
+    fontWeight: 700,
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+    textDecoration: 'none',
+    background: 'transparent',
+  }
 
   return (
-    <main style={{ minHeight: '100dvh', background: THEME.bg, color: THEME.text, fontFamily: THEME.font }}>
-      <div style={{ maxWidth: THEME.maxWidth, margin: '0 auto', padding: '48px 20px 80px' }}>
+    <main style={{ minHeight: '100dvh', background: THEME.bg, color: THEME.text, fontFamily: THEME.font, WebkitFontSmoothing: 'antialiased' }}>
 
-        {/* Hero */}
-        <header style={{ ...section, textAlign: 'center' }}>
-          {person?.photo_url && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={person.photo_url} alt={person?.name || ''} style={{ width: 112, height: 112, borderRadius: '50%', objectFit: 'cover', margin: '0 auto 18px', display: 'block' }} />
+      {/* ── HERO ── full-bleed, cinematic ── */}
+      <section
+        style={{
+          position: 'relative',
+          minHeight: '92vh',
+          display: 'flex',
+          alignItems: 'flex-end',
+          overflow: 'hidden',
+          borderBottom: `1px solid ${THEME.border}`,
+        }}
+      >
+        {person?.photo_url && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={person.photo_url}
+              alt={person?.name || ''}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 30%',
+                opacity: 0.55,
+                filter: 'grayscale(15%) contrast(1.05)',
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.95) 100%)`,
+              }}
+            />
+          </>
+        )}
+        <div style={{ ...wrap, position: 'relative', width: '100%', paddingBottom: 64 }}>
+          <h1
+            style={{
+              fontSize: 'clamp(40px, 8vw, 92px)',
+              fontWeight: 800,
+              lineHeight: 0.98,
+              letterSpacing: -1,
+              textTransform: 'uppercase',
+              margin: 0,
+            }}
+          >
+            {person?.name || params.handle}
+          </h1>
+          {person?.mission && (
+            <p
+              style={{
+                fontSize: 'clamp(16px, 2.4vw, 22px)',
+                color: THEME.text,
+                maxWidth: 680,
+                marginTop: 24,
+                lineHeight: 1.4,
+                fontWeight: 400,
+              }}
+            >
+              {person.mission}
+            </p>
           )}
-          <h1 style={{ fontSize: 34, fontWeight: 800, marginBottom: 8 }}>{person?.name || params.handle}</h1>
-          {person?.mission && <p style={{ fontSize: 18, color: THEME.muted, maxWidth: 520, margin: '0 auto' }}>{person.mission}</p>}
-          {person?.location && <p style={{ fontSize: 14, color: THEME.muted, marginTop: 10 }}>{person.location}</p>}
-          {person?.bio && <p style={{ fontSize: 15, lineHeight: 1.7, marginTop: 20, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>{person.bio}</p>}
-        </header>
+          {person?.location && (
+            <p style={{ fontSize: 13, color: THEME.muted, marginTop: 18, letterSpacing: 3, textTransform: 'uppercase' }}>
+              {person.location}
+            </p>
+          )}
+        </div>
+      </section>
 
-        {/* Pillars */}
-        {pillars && pillars.length > 0 && (
-          <section style={section}>
-            <h2 style={h2}>Pillars</h2>
-            <div style={{ display: 'grid', gap: 14 }}>
-              {pillars.map(p => (
-                <div key={p.id} style={card}>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{p.title}</h3>
-                  {p.description && <p style={{ color: THEME.muted, fontSize: 15, lineHeight: 1.6 }}>{p.description}</p>}
+      {/* ── BIO ── */}
+      {person?.bio && (
+        <section style={{ borderBottom: `1px solid ${THEME.border}`, padding: '72px 0' }}>
+          <div style={wrap}>
+            <div style={sectionLabel}>About</div>
+            <p style={{ fontSize: 'clamp(18px, 2.4vw, 26px)', lineHeight: 1.5, maxWidth: 820, fontWeight: 300 }}>
+              {person.bio}
+            </p>
+          </div>
+        </section>
+      )}
 
-                  {/* Offers under this pillar */}
-                  {(offersByPillar.get(p.id) ?? []).map(o => (
-                    <OfferRow key={o.id} offer={o} />
-                  ))}
-                </div>
-              ))}
+      {/* ── PILLARS ── full-width bands ── */}
+      {pillars && pillars.length > 0 && (
+        <section style={{ borderBottom: `1px solid ${THEME.border}`, padding: '72px 0' }}>
+          <div style={wrap}>
+            <div style={sectionLabel}>Ecosystem</div>
+            <div style={{ display: 'grid', gap: 1, background: THEME.border, border: `1px solid ${THEME.border}` }}>
+              {pillars.map(p => {
+                const pillarOffers = offersByPillar.get(p.id) ?? []
+                return (
+                  <div key={p.id} style={{ background: THEME.bg, padding: '40px 36px' }}>
+                    <h3
+                      style={{
+                        fontSize: 'clamp(24px, 4vw, 40px)',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        letterSpacing: -0.5,
+                        margin: 0,
+                      }}
+                    >
+                      {p.title}
+                    </h3>
+                    {p.description && (
+                      <p style={{ color: THEME.muted, fontSize: 17, lineHeight: 1.6, marginTop: 14, maxWidth: 720 }}>
+                        {p.description}
+                      </p>
+                    )}
+
+                    {pillarOffers.length > 0 && (
+                      <div style={{ marginTop: 24, display: 'grid', gap: 12 }}>
+                        {pillarOffers.map(o => (
+                          <OfferRow key={o.id} offer={o} />
+                        ))}
+                      </div>
+                    )}
+
+                    {p.link_url && (
+                      <a
+                        href={p.link_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ ...ctaOutline, marginTop: 28 }}
+                      >
+                        Learn more &nbsp;&rarr;
+                      </a>
+                    )}
+                  </div>
+                )
+              })}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {/* Loose offers (no pillar) */}
-        {looseOffers.length > 0 && (
-          <section style={section}>
-            <h2 style={h2}>Offers</h2>
-            <div style={{ display: 'grid', gap: 14 }}>
+      {/* ── LOOSE OFFERS ── */}
+      {looseOffers.length > 0 && (
+        <section style={{ borderBottom: `1px solid ${THEME.border}`, padding: '72px 0' }}>
+          <div style={wrap}>
+            <div style={sectionLabel}>Offers</div>
+            <div style={{ display: 'grid', gap: 1, background: THEME.border, border: `1px solid ${THEME.border}` }}>
               {looseOffers.map(o => (
-                <div key={o.id} style={card}><OfferRow offer={o} /></div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Facts */}
-        {facts && facts.length > 0 && (
-          <section style={section}>
-            <h2 style={h2}>About</h2>
-            <div style={{ ...card, display: 'grid', gap: 10 }}>
-              {facts.map(f => (
-                <div key={f.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, fontSize: 15 }}>
-                  <span style={{ color: THEME.muted }}>{f.label}</span>
-                  <span style={{ fontWeight: 600, textAlign: 'right' }}>{f.value}</span>
+                <div key={o.id} style={{ background: THEME.bg, padding: '28px 36px' }}>
+                  <OfferRow offer={o} />
                 </div>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {/* Channels */}
-        {channels && channels.length > 0 && (
-          <section style={section}>
-            <h2 style={h2}>Channels</h2>
-            <div style={{ display: 'grid', gap: 10 }}>
+      {/* ── FACTS ── stat grid ── */}
+      {facts && facts.length > 0 && (
+        <section style={{ borderBottom: `1px solid ${THEME.border}`, padding: '72px 0' }}>
+          <div style={wrap}>
+            <div style={sectionLabel}>By the numbers</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 1, background: THEME.border, border: `1px solid ${THEME.border}` }}>
+              {facts.map(f => (
+                <div key={f.id} style={{ background: THEME.bg, padding: '32px 28px' }}>
+                  <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: -0.5 }}>{f.value}</div>
+                  <div style={{ color: THEME.muted, fontSize: 12, textTransform: 'uppercase', letterSpacing: 2, marginTop: 8 }}>{f.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── CHANNELS ── */}
+      {channels && channels.length > 0 && (
+        <section style={{ borderBottom: `1px solid ${THEME.border}`, padding: '72px 0' }}>
+          <div style={wrap}>
+            <div style={sectionLabel}>Connect</div>
+            <div style={{ display: 'grid', gap: 1, background: THEME.border, border: `1px solid ${THEME.border}` }}>
               {channels.map(c => (
-                <a key={c.id} href={c.url} target="_blank" rel="noopener noreferrer" style={{ ...card, display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', color: THEME.text }}>
-                  <span style={{ fontWeight: 600 }}>{c.platform}</span>
-                  {c.description && <span style={{ color: THEME.muted, fontSize: 14 }}>{c.description}</span>}
+                <a
+                  key={c.id}
+                  href={c.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ background: THEME.bg, padding: '24px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', color: THEME.text }}
+                >
+                  <span style={{ fontWeight: 700, fontSize: 18, textTransform: 'uppercase', letterSpacing: 1 }}>{c.platform}</span>
+                  <span style={{ color: THEME.muted, fontSize: 14 }}>{c.description || 'Visit →'}</span>
                 </a>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {/* Gate */}
-        <footer style={{ textAlign: 'center', marginTop: 64, paddingTop: 32, borderTop: `1px solid ${THEME.border}` }}>
-          <a href="/login" style={{ display: 'inline-block', padding: '12px 24px', borderRadius: 12, background: THEME.accent, color: '#fff', fontWeight: 700, textDecoration: 'none' }}>
+      {/* ── GATE / FOOTER ── */}
+      <footer style={{ padding: '96px 0', textAlign: 'center' }}>
+        <div style={wrap}>
+          <a href="/login" style={ctaOutline}>
             Create your own ecosystem
           </a>
-        </footer>
+        </div>
+      </footer>
 
-      </div>
     </main>
   )
 
   function OfferRow({ offer }: { offer: NonNullable<typeof offers>[number] }) {
     const price = formatPrice(offer.price_cents, offer.currency)
     return (
-      <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid ${THEME.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 14 }}>
-        <div>
-          <div style={{ fontWeight: 600 }}>{offer.title}</div>
-          {offer.description && <div style={{ color: THEME.muted, fontSize: 14, marginTop: 4 }}>{offer.description}</div>}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 18, paddingTop: 12, borderTop: `1px solid ${THEME.border}` }}>
+        <div style={{ paddingTop: 4 }}>
+          <div style={{ fontWeight: 700, fontSize: 16 }}>{offer.title}</div>
+          {offer.description && <div style={{ color: THEME.muted, fontSize: 14, marginTop: 4, lineHeight: 1.5 }}>{offer.description}</div>}
         </div>
-        <div style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-          {price && <div style={{ fontWeight: 700 }}>{price}</div>}
+        <div style={{ textAlign: 'right', whiteSpace: 'nowrap', paddingTop: 4 }}>
+          {price && <div style={{ fontWeight: 800, fontSize: 16 }}>{price}</div>}
           {offer.external_url && (
-            <a href={offer.external_url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: THEME.accent, textDecoration: 'none' }}>
+            <a href={offer.external_url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: THEME.text, textDecoration: 'underline', letterSpacing: 1, textTransform: 'uppercase' }}>
               View
             </a>
           )}

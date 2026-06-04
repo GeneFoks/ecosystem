@@ -84,6 +84,7 @@ export type Database = {
           description: string
           icon: string
           status: string
+          link_url: string
           sort_order: number
           created_at: string
         }
@@ -94,6 +95,7 @@ export type Database = {
           description?: string
           icon?: string
           status?: string
+          link_url?: string
           sort_order?: number
           created_at?: string
         }
@@ -104,6 +106,7 @@ export type Database = {
           description?: string
           icon?: string
           status?: string
+          link_url?: string
           sort_order?: number
           created_at?: string
         }
