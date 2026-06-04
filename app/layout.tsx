@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { AuthProvider } from './providers'
-import PWARegister from '@/components/PWARegister'
 
 export const metadata: Metadata = {
   title: 'Ecosystem Platform',
@@ -29,7 +28,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <AuthProvider>
           {children}
-          <PWARegister />
         </AuthProvider>
       </body>
     </html>
