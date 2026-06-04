@@ -17,7 +17,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (!membership) {
     const desiredHandle = (user.email ?? 'user').split('@')[0]
-    await supabase.rpc('bootstrap_tenant', { desired_handle: desiredHandle })
+    // Cast to bypass rpc type inference (Netlify build was rejecting the
+    // typed args). The function is defined in migration_002_bootstrap.sql.
+    const { error } = await (supabase.rpc as any)('bootstrap_tenant', {
+      desired_handle: desiredHandle,
+    })
+    if (error) throw error
   }
 
   return <>{children}</>
