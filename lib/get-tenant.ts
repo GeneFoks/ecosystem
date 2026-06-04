@@ -12,7 +12,7 @@ export async function requireTenantId(): Promise<{ tenantId: string; userId: str
     .from('tenant_members')
     .select('tenant_id')
     .eq('user_id', user.id)
-    .maybeSingle()
+    .maybeSingle<{ tenant_id: string }>()
 
   if (!membership) redirect('/dashboard')
   return { tenantId: membership.tenant_id, userId: user.id }

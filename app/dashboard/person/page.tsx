@@ -1,27 +1,18 @@
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 import { createSupabaseServer } from '@/lib/supabase-server'
+import { requireTenantId } from '@/lib/get-tenant'
+import type { Person } from '@/lib/database.types'
 import PersonForm from '@/components/PersonForm'
 
 export default async function PersonPage() {
   const supabase = createSupabaseServer()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const { data: membership } = await supabase
-    .from('tenant_members')
-    .select('tenant_id')
-    .eq('user_id', user.id)
-    .maybeSingle()
-
-  if (!membership) redirect('/dashboard')
-  const tenantId = membership.tenant_id
+  const { tenantId } = await requireTenantId()
 
   const { data: person } = await supabase
     .from('persons')
     .select('*')
     .eq('tenant_id', tenantId)
-    .maybeSingle()
+    .maybeSingle<Person>()
 
   return (
     <main style={{ minHeight: '100dvh', padding: 24, maxWidth: 640, margin: '0 auto' }}>

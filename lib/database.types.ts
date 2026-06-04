@@ -23,6 +23,7 @@ export type Database = {
           tier?: string
           created_at?: string
         }
+        Relationships: []
       }
       tenant_members: {
         Row: {
@@ -40,6 +41,7 @@ export type Database = {
           user_id?: string
           role?: string
         }
+        Relationships: []
       }
       persons: {
         Row: {
@@ -72,6 +74,7 @@ export type Database = {
           location?: string
           updated_at?: string
         }
+        Relationships: []
       }
       pillars: {
         Row: {
@@ -104,6 +107,7 @@ export type Database = {
           sort_order?: number
           created_at?: string
         }
+        Relationships: []
       }
       offers: {
         Row: {
@@ -145,6 +149,7 @@ export type Database = {
           sort_order?: number
           created_at?: string
         }
+        Relationships: []
       }
       facts: {
         Row: {
@@ -168,6 +173,7 @@ export type Database = {
           value?: string
           sort_order?: number
         }
+        Relationships: []
       }
       channels: {
         Row: {
@@ -194,6 +200,7 @@ export type Database = {
           description?: string
           sort_order?: number
         }
+        Relationships: []
       }
     }
     Views: Record<string, never>
