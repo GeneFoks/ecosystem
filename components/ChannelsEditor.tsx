@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase as supabaseClient } from '@/lib/supabase'
 import type { Channel } from '@/lib/database.types'
+// Loosely typed for writes — the generated types reject inserts otherwise.
+const supabase = supabaseClient as any
 import { inputStyle, labelStyle, cardStyle, primaryBtn, ghostBtn } from './editor-ui'
 
 export default function ChannelsEditor({ tenantId, initial }: { tenantId: string; initial: Channel[] }) {

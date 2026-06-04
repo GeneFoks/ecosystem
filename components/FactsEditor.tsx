@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase as supabaseClient } from '@/lib/supabase'
+const supabase = supabaseClient as any
 import type { Fact } from '@/lib/database.types'
 import { inputStyle, labelStyle, cardStyle, primaryBtn, ghostBtn } from './editor-ui'
 

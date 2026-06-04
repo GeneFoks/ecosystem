@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase as supabaseClient } from '@/lib/supabase'
+const supabase = supabaseClient as any
 
 type PersonFields = {
   name: string
