@@ -11,6 +11,7 @@ const STATUSES = ['active', 'building', 'idea']
 export default function PillarsEditor({ tenantId, initial }: { tenantId: string; initial: Pillar[] }) {
   const [rows, setRows] = useState<Pillar[]>(initial)
   const [busy, setBusy] = useState(false)
+  const [savedId, setSavedId] = useState<string | null>(null)
 
   const addRow = async () => {
     setBusy(true)
@@ -37,6 +38,8 @@ export default function PillarsEditor({ tenantId, initial }: { tenantId: string;
       sort_order: row.sort_order,
     }).eq('id', row.id)
     setBusy(false)
+    setSavedId(row.id)
+    setTimeout(() => setSavedId(s => (s === row.id ? null : s)), 2000)
   }
 
   const deleteRow = async (id: string) => {
@@ -81,6 +84,7 @@ export default function PillarsEditor({ tenantId, initial }: { tenantId: string;
           <div style={{ display: 'flex', gap: 10 }}>
             <button style={primaryBtn} disabled={busy} onClick={() => saveRow(row)}>Save</button>
             <button style={ghostBtn} disabled={busy} onClick={() => deleteRow(row.id)}>Delete</button>
+            {savedId === row.id && <span style={{ color: '#4ade80', alignSelf: 'center', fontSize: 14 }}>Saved</span>}
           </div>
         </div>
       ))}
