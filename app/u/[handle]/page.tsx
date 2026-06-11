@@ -113,74 +113,41 @@ export default async function PublicPage({ params }: Params) {
   return (
     <main style={{ minHeight: '100dvh', background: THEME.bg, color: THEME.text, fontFamily: THEME.font, WebkitFontSmoothing: 'antialiased' }}>
 
-      {/* ── HERO ── full-bleed, cinematic ── */}
-      <section
-        style={{
-          position: 'relative',
-          minHeight: '92vh',
-          display: 'flex',
-          alignItems: 'flex-end',
-          overflow: 'hidden',
-          borderBottom: `1px solid ${THEME.border}`,
-        }}
-      >
-        {person?.photo_url && (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={person.photo_url}
-              alt={person?.name || ''}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center 30%',
-                opacity: 0.55,
-                filter: 'grayscale(15%) contrast(1.05)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.95) 100%)`,
-              }}
-            />
-          </>
-        )}
-        <div style={{ ...wrap, position: 'relative', width: '100%', paddingBottom: 64 }}>
-          <h1
-            style={{
-              fontSize: 'clamp(40px, 8vw, 92px)',
-              fontWeight: 800,
-              lineHeight: 0.98,
-              letterSpacing: -1,
-              textTransform: 'uppercase',
-              margin: 0,
-            }}
-          >
-            {person?.name || params.handle}
-          </h1>
-          {person?.mission && (
-            <p
-              style={{
-                fontSize: 'clamp(16px, 2.4vw, 22px)',
-                color: THEME.text,
-                maxWidth: 680,
-                marginTop: 24,
-                lineHeight: 1.4,
-                fontWeight: 400,
-              }}
-            >
-              {person.mission}
-            </p>
-          )}
-          {person?.location && (
-            <p style={{ fontSize: 13, color: THEME.muted, marginTop: 18, letterSpacing: 3, textTransform: 'uppercase' }}>
-              {person.location}
-            </p>
+      {/* ── HERO ── split layout: text + contained portrait ── */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .hero { display:grid; grid-template-columns: 1fr 0.85fr; gap:48px; align-items:center;
+                min-height:88vh; max-width:${THEME.maxWidth}px; margin:0 auto; padding:80px 24px; }
+        .hero-photo { width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center 25%;
+                      filter:grayscale(20%) contrast(1.05); display:block; }
+        .hero-name { font-size:clamp(40px,6vw,84px); font-weight:800; line-height:0.98;
+                     letter-spacing:-1px; text-transform:uppercase; margin:0; }
+        @media (max-width: 820px) {
+          .hero { grid-template-columns: 1fr; gap:32px; min-height:auto; padding:48px 24px 64px; text-align:center; }
+          .hero-photo { max-width:340px; margin:0 auto; aspect-ratio:1/1; }
+          .hero-text { order:2; }
+          .hero-photo-wrap { order:1; }
+        }
+      ` }} />
+      <section style={{ borderBottom: `1px solid ${THEME.border}` }}>
+        <div className="hero">
+          <div className="hero-text">
+            <h1 className="hero-name">{person?.name || params.handle}</h1>
+            {person?.mission && (
+              <p style={{ fontSize: 'clamp(16px, 2.2vw, 22px)', color: THEME.text, maxWidth: 560, marginTop: 24, lineHeight: 1.4 }}>
+                {person.mission}
+              </p>
+            )}
+            {person?.location && (
+              <p style={{ fontSize: 13, color: THEME.muted, marginTop: 18, letterSpacing: 3, textTransform: 'uppercase' }}>
+                {person.location}
+              </p>
+            )}
+          </div>
+          {person?.photo_url && (
+            <div className="hero-photo-wrap">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="hero-photo" src={person.photo_url} alt={person?.name || ''} />
+            </div>
           )}
         </div>
       </section>
